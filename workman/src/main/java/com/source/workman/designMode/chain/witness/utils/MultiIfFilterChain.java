@@ -5,7 +5,10 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+/**
+ * @author liuzh
+ */
+//@Component
 public class MultiIfFilterChain<T> implements MultiIfFilter<T> {
 
     private static MultiIfFilterChain instance = new MultiIfFilterChain();

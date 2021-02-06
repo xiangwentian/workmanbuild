@@ -1,0 +1,7 @@
+#之前
+<property name="log.pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{20} - [%method,%line] - %msg%n" />
+#增加traceId后
+<property name="log.pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{20} - [%method,%line] - [%X{TRACE_ID}] - %msg%n" />
+
+
+拦截作用顺序：Aspect->全局处理器->拦截器->过滤器->Tomcat
