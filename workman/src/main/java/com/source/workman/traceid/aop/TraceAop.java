@@ -30,7 +30,11 @@ public class TraceAop {
      * 后面括弧里面表示方法的参数，两个句点表示任何参数
      */
 //    @Pointcut("execution(* *(..)) ")
-    @Pointcut("execution(* com.source.workman.controller.*.*(..))")
+/*切点定义方法太泛了引起的问题
+   将切点定义的方法范围缩小，问题就解决了*/
+
+//    @Pointcut("execution(* com.source.workman.controller.*.*(..))")
+    @Pointcut("execution(* com.source.workman..*.*(..))")
     public void executionService() {
     }
 
