@@ -1,0 +1,2 @@
+ProviderTranceFilter=com.workman.trace.dubbo.filter.ProviderTraceFilter
+ConsumeTraceFilter=com.workman.trace.dubbo.filter.ConsumerTraceFilter
