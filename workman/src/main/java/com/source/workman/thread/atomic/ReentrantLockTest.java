@@ -1,4 +1,4 @@
-package com.source.workman.atomic;
+package com.source.workman.thread.atomic;
 
 import java.util.concurrent.locks.ReentrantLock;
 

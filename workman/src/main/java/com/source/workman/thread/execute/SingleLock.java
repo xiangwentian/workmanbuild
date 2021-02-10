@@ -1,4 +1,4 @@
-package com.source.workman.execute;
+package com.source.workman.thread.execute;
 
 /**
  * DCL 双检锁 double check lock

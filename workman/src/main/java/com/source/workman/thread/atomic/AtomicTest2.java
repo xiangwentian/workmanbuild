@@ -1,4 +1,4 @@
-package com.source.workman.atomic;
+package com.source.workman.thread.atomic;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;

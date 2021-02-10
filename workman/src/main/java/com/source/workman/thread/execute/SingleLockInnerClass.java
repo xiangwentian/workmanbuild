@@ -1,4 +1,4 @@
-package com.source.workman.execute;
+package com.source.workman.thread.execute;
 
 /**
  * 静态内部类方式实现
