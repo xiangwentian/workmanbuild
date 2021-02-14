@@ -1,43 +1,93 @@
 package com.source.workman.thread.atomic;
 
+import java.util.PriorityQueue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ReentrantLockCondition2 {
-    final Lock lock = new ReentrantLock();//锁对象
-    final Condition notFull = lock.newCondition();//写线程条件 
-    final Condition notEmpty = lock.newCondition();//读线程条件 
+    private int queueSize = 10;
+    private PriorityQueue<Integer> queue = new PriorityQueue<Integer>(queueSize);
 
-    final Object[] items = new Object[100];//缓存队列
-    int putptr/*写索引*/, takeptr/*读索引*/, count/*队列中存在的数据个数*/;
+    private Lock lock = new ReentrantLock();
+    private Condition full = lock.newCondition();
+    private Condition empty = lock.newCondition();
 
-    public void put(Object x) throws InterruptedException {
-        lock.lock();
-        try {
-            while (count == items.length)//如果队列满了 
-                notFull.await();//阻塞写线程
-            items[putptr] = x;//赋值 
-            if (++putptr == items.length) putptr = 0;//如果写索引写到队列的最后一个位置了，那么置为0
-            ++count;//个数++
-            notEmpty.signal();//唤醒读线程
-        } finally {
-            lock.unlock();
+    class Consumer implements Runnable {
+
+        @Override
+        public void run() {
+            consume();
+        }
+
+        /**
+         * 消费者
+         */
+        private void consume() {
+            while (true) {
+                lock.lock();
+                try {
+                    while (queue.size() == 0) {
+                        try {
+                            System.out.println("队列空，等待数据");
+                            empty.await();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    Integer i = queue.poll();
+                    full.signal();
+                    System.out.println("从队列取走一个元素:" + i + "，队列剩余" + queue.size() + "个元素");
+                } finally {
+                    lock.unlock();
+                }
+            }
+
         }
     }
 
-    public Object take() throws InterruptedException {
-        lock.lock();
-        try {
-            while (count == 0)//如果队列为空
-                notEmpty.await();//阻塞读线程
-            Object x = items[takeptr];//取值 
-            if (++takeptr == items.length) takeptr = 0;//如果读索引读到队列的最后一个位置了，那么置为0
-            --count;//个数--
-            notFull.signal();//唤醒写线程
-            return x;
-        } finally {
-            lock.unlock();
+    /**
+     * 消费者
+     */
+    class Producer implements Runnable {
+
+        @Override
+        public void run() {
+            produce();
         }
+
+        private void produce() {
+            int i=1;
+            while (true) {
+                lock.lock();
+                try {
+                    while (queue.size() == queueSize) {
+                        try {
+                            System.out.println("队列满，等待有空余空间");
+                            full.await();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+//                    queue.offer(1);
+                    queue.offer(i++);
+                    empty.signal();
+                } finally {
+                    lock.unlock();
+                }
+            }
+        }
+
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        ReentrantLockCondition2 r2 = new ReentrantLockCondition2();
+        Consumer cus = r2.new Consumer();
+        Producer pro = r2.new Producer();
+        Thread cusT = new Thread(cus);
+        Thread proT = new Thread(pro);
+
+        proT.start();
+        cusT.start();
     }
 }

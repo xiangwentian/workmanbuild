@@ -2,6 +2,12 @@ package com.source.workman.thread.atomic;
 
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * ReentrantLock
+ * CAS状态
+ * 等待队列
+ * park()
+ */
 public class ReentrantLockTest {
     private final ReentrantLock lock = new ReentrantLock();
 

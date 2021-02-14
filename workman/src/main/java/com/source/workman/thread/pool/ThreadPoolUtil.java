@@ -15,4 +15,5 @@ public class ThreadPoolUtil {
     private static RejectedExecutionHandler handler = new ThreadPoolExecutor.AbortPolicy();
 
     public final static ThreadPoolExecutor executor = new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAliveTime, SECONDS, workQueue, threadFactory, handler);
+
 }
